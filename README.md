@@ -19,20 +19,27 @@ After generating the file, you should be able to view it in your browser using t
 
 ## Home Assistant
 
-Integrating it in to Home Assistant requires two steps. The REST sensor to bring the data in, and then a forecast generated from the REST information. 
+Integrating it into Home Assistant requires two steps. The REST sensor to bring the data in, and then a forecast generated from the REST information. 
 
 ### REST Sensor
 
-Copy the contents of wxsim.yaml in to your includes directory for Sensor information. See https://www.home-assistant.io/docs/configuration/splitting_configuration/ for using Includes. 
-This allows you to keep the content seperate. 
+Copy the contents of wxsim.yaml in to the includes directory for Sensor information. See https://www.home-assistant.io/docs/configuration/splitting_configuration/ for using Includes. 
+This allows you to keep the content separate. 
 
 Adjust the URL for the sensor to match the one that you have setup. After adding in the sensor, reboot Home Assistant, and then check the sensors have been created using Developer Tools. 
-You only need the top sensor - the rest simply crate additional sensors which can then be used in automations. Remove any that you don't need. 
+
+Note: You only need the first sensor "wxsim_forecast" - the rest simply create additional sensors which can then be used in automations. Remove any that you don't need. 
+The second sensor "wxsim_update" pulls the update time from the JSON, which will be useful for creating an automation to alert you if WXSIM hasn't generated a new forecast. 
+
+![Binary Sensors created in HA.](/WXSIM_Binary_Sensors.png) 
 
 ### Weather Forecast
 
 With the sensors created, you can now create the weather forecast. 
 
-Copy the contents of wxsim_forecast.yaml into your configuration.yaml or if you are using includes, in to its own file under the weather directory/file. 
-Reboot Home Assistant. You should then find tha you have the forecast listed as weather.wxsim, which you can integrate in to Weather Cards as required. 
+Copy the contents of wxsim_forecast.yaml into your configuration.yaml or if you are using includes, into its own file under the weather directory/file. 
+Reboot Home Assistant. You should then find that you have the forecast listed as weather.wxsim, which you can integrate into Weather Cards as required.
 
+The screenshot below shows current conditions, hourly and daily forecast. 
+
+![Weather Forecast in HA.](/WXSIM_in_HA.png)
