@@ -1,0 +1,111 @@
+  - platform: rest
+    name: wxsim_forecast
+    resource: http://yourserver/forecast.json
+    value_template: "{{ value_json.generated_at }}"
+    json_attributes:
+      - daily
+      - hourly
+    scan_interval: 1800
+    
+  - platform: rest
+    name: wxsim_update
+    unique_id: wxsim_update
+    resource: http://yourserver/forecast.json
+    value_template: "{{ value_json.generated_at }}"
+    scan_interval: 600
+    
+  - platform: rest
+    name: wxsim_temperature
+    unique_id: wxsim_temperature
+    resource: http://yourserver/forecast.json
+    value_template: "{{ value_json.hourly[0].temperature }}"
+    unit_of_measurement: "°C"
+    scan_interval: 1800
+
+  - platform: rest
+    name: wxsim_apparent_temperature
+    unique_id: wxsim_apparent_temperature
+    resource: http://yourserver/forecast.json
+    value_template: "{{ value_json.hourly[0].feels_like }}"
+    unit_of_measurement: "°C"
+    scan_interval: 1800
+
+  - platform: rest
+    name: wxsim_humidity
+    unique_id: wxsim_humidity
+    resource: http://yourserver/forecast.json
+    value_template: "{{ value_json.hourly[0].humidity }}"
+    unit_of_measurement: "%"
+    scan_interval: 1800
+
+  - platform: rest
+    name: wxsim_precipitation
+    unique_id: wxsim_precipitation
+    resource: http://yourserver/forecast.json
+    value_template: "{{ value_json.hourly[0].precipitation }}"
+    unit_of_measurement: "mm"
+    scan_interval: 1800
+
+  - platform: rest
+    name: wxsim_pressure
+    unique_id: wxsim_pressure
+    resource: http://yourserver/forecast.json
+    value_template: "{{ value_json.hourly[0].pressure }}"
+    unit_of_measurement: "hPa"
+    scan_interval: 1800
+
+  - platform: rest
+    name: wxsim_wind_speed
+    unique_id: wxsim_wind_speed
+    resource: http://yourserver/forecast.json
+    value_template: "{{ value_json.hourly[0].wind_speed }}"
+    unit_of_measurement: "mph"
+    scan_interval: 1800
+
+  - platform: rest
+    name: wxsim_wind_bearing
+    unique_id: wxsim_wind_bearing
+    resource: http://yourserver/forecast.json
+    value_template: "{{ value_json.hourly[0].wind_bearing }}"
+    scan_interval: 1800
+
+  - platform: rest
+    name: wxsim_wind_gust_speed
+    unique_id: wxsim_wind_gust_speed
+    resource: http://yourserver/forecast.json
+    value_template: "{{ value_json.hourly[0].wind_gust_speed | default(0) }}"
+    unit_of_measurement: "mph"
+    scan_interval: 1800
+
+  - platform: rest
+    name: wxsim_uv_index
+    unique_id: wxsim_uv_index
+    resource: http://yourserver/forecast.json
+    value_template: "{{ value_json.hourly[0].uv_index | default(0) }}"
+    unit_of_measurement: "UV"
+    scan_interval: 1800
+
+  - platform: rest
+    name: wxsim_visibility
+    unique_id: wxsim_visibility
+    resource: http://yourserver/forecast.json
+    value_template: "{{ value_json.hourly[0].visibility | default(0) }}"
+    unit_of_measurement: "km"
+    scan_interval: 1800
+
+  - platform: rest
+    name: wxsim_dew_point
+    unique_id: wxsim_dew_point
+    resource: http://yourserver/forecast.json
+    value_template: "{{ value_json.hourly[0].dew_point | default(0) }}"
+    unit_of_measurement: "°C"
+    scan_interval: 1800
+
+  - platform: rest
+    name: wxsim_cloud_coverage
+    unique_id: wxsim_cloud_coverage
+    resource: http://yourserver/forecast.json
+    value_template: "{{ value_json.hourly[0].cloud_coverage | default(0) }}"
+    unit_of_measurement: "%"
+    scan_interval: 1800
+    
