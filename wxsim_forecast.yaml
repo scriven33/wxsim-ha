@@ -1,0 +1,112 @@
+weather:
+  - platform: template
+    name: WXSIM Forecast
+    temperature_template: >
+      {% set forecast = state_attr('sensor.wxsim_forecast', 'hourly') | default([]) %}
+      {% if forecast and forecast[0] is defined %}
+        {{ forecast[0].temperature }}
+      {% else %}
+        unavailable
+      {% endif %}
+    humidity_template: >
+      {% set forecast = state_attr('sensor.wxsim_forecast', 'hourly') | default([]) %}
+      {% if forecast and forecast[0] is defined %}
+        {{ forecast[0].humidity }}
+      {% else %}
+        unavailable
+      {% endif %}
+    wind_speed_template: >
+      {% set forecast = state_attr('sensor.wxsim_forecast', 'hourly') | default([]) %}
+      {% if forecast and forecast[0] is defined %}
+        {{ forecast[0].wind_speed }}
+      {% else %}
+        unavailable
+      {% endif %}
+    wind_bearing_template: >
+      {% set forecast = state_attr('sensor.wxsim_forecast', 'hourly') | default([]) %}
+      {% if forecast and forecast[0] is defined and 'wind_bearing' in forecast[0] %}
+        {{ forecast[0].wind_bearing }}
+      {% else %}
+        unavailable
+      {% endif %}
+    pressure_template: >
+      {% set forecast = state_attr('sensor.wxsim_forecast', 'hourly') | default([]) %}
+      {% if forecast and forecast[0] is defined and 'pressure' in forecast[0] %}
+        {{ forecast[0].pressure }}
+      {% else %}
+        unavailable
+      {% endif %}
+    visibility_template: >
+      {% set forecast = state_attr('sensor.wxsim_forecast', 'hourly') | default([]) %}
+      {% if forecast and forecast[0] is defined and 'visibility' in forecast[0] %}
+        {{ forecast[0].visibility }}
+      {% else %}
+        unavailable
+      {% endif %}
+    dew_point_template: >
+      {% set forecast = state_attr('sensor.wxsim_forecast', 'hourly') | default([]) %}
+      {% if forecast and forecast[0] is defined and 'dew_point' in forecast[0] %}
+        {{ forecast[0].dew_point }}
+      {% else %}
+        unavailable
+      {% endif %}
+    cloud_coverage_template: >
+      {% set forecast = state_attr('sensor.wxsim_forecast', 'hourly') | default([]) %}
+      {% if forecast and forecast[0] is defined and 'cloud_coverage' in forecast[0] %}
+        {{ forecast[0].cloud_coverage }}
+      {% else %}
+        unavailable
+      {% endif %}
+    condition_template: >
+      {% set forecast = state_attr('sensor.wxsim_forecast', 'hourly') | default([]) %}
+      {% if forecast and forecast[0] is defined %}
+        {% set temp = forecast[0].temperature | float(0) %}
+        {% set precip = forecast[0].precipitation | float(0) %}
+        {% set humidity = forecast[0].humidity | float(0) %}
+        {% set wind = forecast[0].wind_speed | float(0) %}
+        {% set hour = now().astimezone().hour %}
+        {% set is_night = hour < 6 or hour >= 21 %}
+        {% if temp < 1 and precip > 0 %}
+          snowy
+        {% elif precip >= 10 %}
+          pouring
+        {% elif precip >= 2 %}
+          rainy
+        {% elif precip > 0 %}
+          partlycloudy
+        {% elif is_night %}
+          clear-night
+        {% elif humidity > 95 %}
+          fog
+        {% elif wind > 15 %}
+          windy
+        {% else %}
+          sunny
+        {% endif %}
+      {% else %}
+        unknown
+      {% endif %}
+    forecast_hourly_template: >
+      {% set hours = state_attr('sensor.wxsim_forecast', 'hourly') | default([]) %}
+      {% set now_ts = now().timestamp() %}
+      [
+        {% for hour in hours if as_timestamp(hour.datetime) > now_ts %}
+          {
+            "datetime": "{{ hour.datetime }}",
+            "temperature": {{ hour.temperature }},
+            "condition": "{{ hour.condition if 'condition' in hour else 'sunny' }}"
+          }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    forecast_daily_template: >
+      {% set days = state_attr('sensor.wxsim_forecast', 'daily') | default([]) %}
+      [
+        {% for day in days %}
+          {
+            "datetime": "{{ day.datetime }}",
+            "temperature": {{ day.temperature }},
+            "templow": {{ day.templow }},
+            "condition": "{{ day.condition if 'condition' in day else 'sunny' }}"
+          }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
